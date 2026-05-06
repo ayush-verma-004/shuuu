@@ -21,7 +21,12 @@ body {
     color: var(--text-color);
     font-family: var(--font-main);
     overflow-x: hidden;
-    cursor: none; /* Custom cursor used */
+    cursor: none;
+    scroll-behavior: smooth;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 canvas#bg-canvas {
@@ -56,6 +61,7 @@ canvas#bg-canvas {
     pointer-events: none;
     z-index: 9999;
     mix-blend-mode: difference;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 #cursor-blur {
@@ -68,6 +74,7 @@ canvas#bg-canvas {
     z-index: 9998;
     transform: translate(-50%, -50%);
     transition: width 0.3s, height 0.3s;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
 }
 
 /* Loader */
@@ -77,7 +84,7 @@ canvas#bg-canvas {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #000;
+    background: linear-gradient(135deg, #000 0%, #0a0a0a 100%);
     z-index: 10000;
     display: flex;
     justify-content: center;
@@ -91,10 +98,10 @@ canvas#bg-canvas {
 
 .glow-line {
     width: 0;
-    height: 1px;
+    height: 2px;
     background: linear-gradient(90deg, transparent, #fff, transparent);
     margin: 20px auto;
-    box-shadow: 0 0 15px #fff;
+    box-shadow: 0 0 25px #fff, 0 0 50px rgba(255, 255, 255, 0.5);
 }
 
 .loader-text {
@@ -107,6 +114,7 @@ canvas#bg-canvas {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
+    letter-spacing: 1px;
 }
 
 /* Hero */
@@ -120,6 +128,8 @@ canvas#bg-canvas {
     font-size: 1.8rem;
     color: var(--secondary-color);
     margin-bottom: 10px;
+    letter-spacing: 0.5px;
+    text-transform: none;
 }
 
 .hero-content h1 {
@@ -127,11 +137,16 @@ canvas#bg-canvas {
     font-size: clamp(3rem, 8vw, 6rem);
     margin-bottom: 40px;
     line-height: 1.1;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 0%, #d0d0d0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .premium-btn {
     background: transparent;
-    border: 1px solid var(--glass-border);
+    border: 2px solid var(--glass-border);
     padding: 18px 45px;
     color: #fff;
     font-size: 0.9rem;
@@ -140,17 +155,31 @@ canvas#bg-canvas {
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    font-weight: 600;
+}
+
+.premium-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
 }
 
 .premium-btn:hover {
     border-color: #fff;
-    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    box-shadow: 0 0 30px rgba(255,255,255,0.3), inset 0 0 20px rgba(255,255,255,0.1);
+    transform: translateY(-2px);
 }
 
-.premium-btn:active {
-    opacity: 0.8;
+.premium-btn:hover::before {
+    left: 100%;
 }
 
 .btn-glow {
@@ -159,7 +188,7 @@ canvas#bg-canvas {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     transition: 0.5s;
 }
 
@@ -170,6 +199,17 @@ canvas#bg-canvas {
 /* Gallery */
 .section-header {
     margin-bottom: 60px;
+    position: relative;
+}
+
+.section-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #fff, transparent);
 }
 
 .sub-heading {
@@ -179,11 +219,13 @@ canvas#bg-canvas {
     font-size: 0.8rem;
     color: var(--secondary-color);
     margin-bottom: 20px;
+    font-weight: 600;
 }
 
 .title {
     font-family: var(--font-serif);
     font-size: 3rem;
+    letter-spacing: -1px;
 }
 
 .gallery-grid {
@@ -196,7 +238,22 @@ canvas#bg-canvas {
     position: relative;
     height: 600px;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.gallery-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.5s ease;
+}
+
+.gallery-item:hover::before {
+    opacity: 1;
 }
 
 .glass-frame {
@@ -206,20 +263,25 @@ canvas#bg-canvas {
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(10px);
     padding: 20px;
-    transition: 0.5s;
+    transition: all 0.5s ease;
+}
+
+.gallery-item:hover .glass-frame {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: saturate(0.8) contrast(1.1);
-    transition: 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+    filter: saturate(0.8) contrast(1.1) brightness(0.95);
+    transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
 .gallery-item:hover img {
-    transform: scale(1.05);
-    filter: saturate(1) contrast(1.1);
+    transform: scale(1.08);
+    filter: saturate(1.1) contrast(1.15) brightness(1);
 }
 
 .gallery-item::after {
@@ -233,8 +295,9 @@ canvas#bg-canvas {
     font-size: 1.2rem;
     opacity: 0;
     transform: translateY(20px);
-    transition: 0.5s;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 4px 15px rgba(0,0,0,0.7);
+    z-index: 3;
 }
 
 .gallery-item:hover::after {
@@ -254,7 +317,9 @@ canvas#bg-canvas {
     font-family: var(--font-serif);
     font-size: clamp(2rem, 5vw, 4rem);
     text-align: center;
-    opacity: 0.1; /* Controlled by ScrollTrigger */
+    opacity: 0.1;
+    letter-spacing: -0.5px;
+    line-height: 1.3;
 }
 
 /* Little Things */
@@ -276,6 +341,13 @@ canvas#bg-canvas {
     line-height: 1.6;
     color: var(--secondary-color);
     position: absolute;
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.float-card:hover {
+    color: #fff;
+    transform: translateY(-5px);
 }
 
 .glass {
@@ -283,6 +355,13 @@ canvas#bg-canvas {
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(15px);
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    transition: all 0.4s ease;
+}
+
+.float-card:hover.glass {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 50px rgba(255, 255, 255, 0.1);
 }
 
 /* Secret Scene */
@@ -294,6 +373,11 @@ canvas#bg-canvas {
     height: 20px;
     cursor: pointer;
     z-index: 100;
+    transition: all 0.3s ease;
+}
+
+#secret-trigger:hover {
+    transform: scale(1.2);
 }
 
 .pulse-glow {
@@ -306,9 +390,9 @@ canvas#bg-canvas {
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.3; }
-    100% { transform: scale(1); opacity: 1; }
+    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 20px #fff; }
+    50% { transform: scale(1.5); opacity: 0.3; box-shadow: 0 0 40px #fff; }
+    100% { transform: scale(1); opacity: 1; box-shadow: 0 0 20px #fff; }
 }
 
 #secret-scene {
@@ -324,7 +408,8 @@ canvas#bg-canvas {
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(5px);
 }
 
 #secret-scene.active {
@@ -336,6 +421,18 @@ canvas#bg-canvas {
     text-align: center;
     max-width: 600px;
     padding: 20px;
+    animation: slideInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .heartbeat {
@@ -344,7 +441,7 @@ canvas#bg-canvas {
     background: #fff;
     border-radius: 50%;
     margin: 0 auto 40px;
-    box-shadow: 0 0 50px #fff;
+    box-shadow: 0 0 50px #fff, 0 0 100px rgba(255, 255, 255, 0.5);
     animation: beat 1s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }
 
@@ -362,6 +459,7 @@ canvas#bg-canvas {
     font-style: italic;
     min-height: 2.5rem;
     word-wrap: break-word;
+    letter-spacing: 0.5px;
 }
 
 .close-btn {
@@ -374,12 +472,18 @@ canvas#bg-canvas {
     font-size: 2rem;
     cursor: pointer;
     opacity: 0.5;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .close-btn:hover {
     opacity: 1;
+    transform: rotate(90deg) scale(1.2);
 }
 
 .close-btn:active {
@@ -396,12 +500,17 @@ canvas#bg-canvas {
     font-size: 2rem;
     margin-bottom: 20px;
     color: var(--secondary-color);
+    letter-spacing: 0.5px;
 }
 
 .final-line p {
     font-size: 3rem;
     color: #fff;
     margin-top: 40px;
+    background: linear-gradient(135deg, #fff 0%, #d0d0d0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Sound Toggle */
@@ -415,6 +524,16 @@ canvas#bg-canvas {
     cursor: pointer;
     z-index: 1000;
     -webkit-tap-highlight-color: transparent;
+    transition: all 0.3s ease;
+    padding: 10px 15px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sound-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .music-label {
@@ -422,6 +541,7 @@ canvas#bg-canvas {
     letter-spacing: 3px;
     font-size: 0.7rem;
     opacity: 0.6;
+    font-weight: 600;
 }
 
 .bars {
@@ -437,6 +557,7 @@ canvas#bg-canvas {
     height: 100%;
     transform-origin: bottom;
     animation: bounce 1s infinite ease-in-out;
+    border-radius: 1px;
 }
 
 .bar:nth-child(2) { animation-delay: 0.2s; }
@@ -458,6 +579,11 @@ canvas#bg-canvas {
     transform: translateY(30px);
 }
 
+/* Smooth transitions */
+a, button {
+    transition: all 0.3s ease;
+}
+
 /* ============ MOBILE RESPONSIVE ============ */
 
 /* Tablets and small devices (481px - 768px) */
@@ -471,13 +597,11 @@ canvas#bg-canvas {
         min-height: auto;
     }
 
-    /* Hide custom cursor and 3D tilt effects */
     #cursor,
     #cursor-blur {
         display: none;
     }
 
-    /* Hero adjustments */
     .hero-content h2 {
         font-size: 1.3rem;
     }
@@ -495,7 +619,6 @@ canvas#bg-canvas {
         min-width: 44px;
     }
 
-    /* Gallery adjustments */
     .gallery-grid {
         grid-template-columns: 1fr;
         gap: 25px;
@@ -530,7 +653,11 @@ canvas#bg-canvas {
         margin-bottom: 40px;
     }
 
-    /* Story adjustments */
+    .section-header::before {
+        width: 60px;
+        bottom: -15px;
+    }
+
     .story-sequence {
         gap: 8vh;
         padding: 5vh 0;
@@ -540,7 +667,6 @@ canvas#bg-canvas {
         font-size: clamp(1.5rem, 5vw, 2.5rem);
     }
 
-    /* Floating cards adjustments */
     .floating-cards {
         height: auto;
         padding-bottom: 20px;
@@ -554,7 +680,6 @@ canvas#bg-canvas {
         transform: none !important;
     }
 
-    /* Ending adjustments */
     .ending-content p {
         font-size: 1.5rem;
         margin-bottom: 15px;
@@ -565,7 +690,6 @@ canvas#bg-canvas {
         margin-top: 25px;
     }
 
-    /* Secret trigger adjustments */
     #secret-trigger {
         bottom: 20px;
         right: 20px;
@@ -573,11 +697,11 @@ canvas#bg-canvas {
         height: 25px;
     }
 
-    /* Sound toggle adjustments */
     #sound-toggle {
         top: 20px;
         right: 20px;
         gap: 10px;
+        padding: 8px 12px;
     }
 
     .music-label {
@@ -585,7 +709,6 @@ canvas#bg-canvas {
         letter-spacing: 2px;
     }
 
-    /* Secret scene adjustments */
     .scene-content {
         max-width: 90vw;
         padding: 30px;
@@ -607,7 +730,6 @@ canvas#bg-canvas {
         margin: 0 auto 30px;
     }
 
-    /* Loader adjustments */
     .loader-text {
         font-size: 1.2rem;
     }
@@ -628,7 +750,6 @@ canvas#bg-canvas {
         min-height: auto;
     }
 
-    /* Hero adjustments */
     .hero-content h2 {
         font-size: 1.1rem;
         margin-bottom: 8px;
@@ -646,7 +767,6 @@ canvas#bg-canvas {
         letter-spacing: 1px;
     }
 
-    /* Gallery adjustments */
     .gallery-grid {
         gap: 15px;
     }
@@ -680,7 +800,11 @@ canvas#bg-canvas {
         margin-bottom: 30px;
     }
 
-    /* Story adjustments */
+    .section-header::before {
+        width: 50px;
+        bottom: -12px;
+    }
+
     .story-sequence {
         gap: 6vh;
         padding: 3vh 0;
@@ -691,7 +815,6 @@ canvas#bg-canvas {
         line-height: 1.3;
     }
 
-    /* Floating cards adjustments */
     .float-card {
         padding: 15px;
         margin-bottom: 12px !important;
@@ -699,7 +822,6 @@ canvas#bg-canvas {
         line-height: 1.5;
     }
 
-    /* Ending adjustments */
     .ending-content p {
         font-size: 1.3rem;
         margin-bottom: 12px;
@@ -710,7 +832,6 @@ canvas#bg-canvas {
         margin-top: 20px;
     }
 
-    /* Secret scene adjustments */
     .scene-content {
         max-width: 95vw;
         padding: 20px;
@@ -733,11 +854,11 @@ canvas#bg-canvas {
         margin: 0 auto 25px;
     }
 
-    /* Sound toggle adjustments */
     #sound-toggle {
         top: 15px;
         right: 15px;
         gap: 8px;
+        padding: 6px 10px;
     }
 
     .music-label {
@@ -753,13 +874,11 @@ canvas#bg-canvas {
         width: 1.5px;
     }
 
-    /* Secret trigger adjustments */
     #secret-trigger {
         bottom: 15px;
         right: 15px;
     }
 
-    /* Loader adjustments */
     .loader-text {
         font-size: 1rem;
         padding: 0 15px;

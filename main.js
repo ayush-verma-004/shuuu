@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleMobileOptimizations();
 });
 
-// 1. Smooth Scrolling (Lenis) - Optimized for mobile
+// 1. Smooth Scrolling (Lenis)
 function initLenis() {
     const config = isMobile() ? {
         duration: 0.8,
@@ -56,7 +56,7 @@ function initThreeBackground() {
     const canvas = document.querySelector('#bg-canvas');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -127,11 +127,11 @@ function initThreeBackground() {
     }, { passive: true });
 }
 
-// 3. GSAP Animations - Mobile optimized
+// 3. GSAP Animations
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Loader Timeline
+    // Loader Timeline with enhanced animations
     const tl = gsap.timeline();
 
     tl.to(".glow-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
@@ -157,8 +157,8 @@ function initAnimations() {
         gsap.to("#hero", { scale: 1.2, opacity: 0, duration: 2, ease: "power4.inOut" });
     });
 
-    // Gallery Animations
-    gsap.utils.toArray(".gallery-item").forEach((item) => {
+    // Gallery Animations with stagger
+    gsap.utils.toArray(".gallery-item").forEach((item, index) => {
         gsap.from(item, {
             scrollTrigger: {
                 trigger: item,
@@ -168,11 +168,12 @@ function initAnimations() {
             opacity: 0,
             y: 100,
             duration: 1.5,
-            ease: "power4.out"
+            ease: "power4.out",
+            delay: index * 0.15
         });
     });
 
-    // Story Text Fade-in-out
+    // Story Text Fade-in-out with enhanced effect
     gsap.utils.toArray(".story-text").forEach((text) => {
         gsap.to(text, {
             scrollTrigger: {
@@ -182,7 +183,7 @@ function initAnimations() {
                 scrub: true,
             },
             opacity: 1,
-            scale: 1.1,
+            scale: 1.05,
             color: "#fff"
         });
     });
@@ -210,8 +211,8 @@ function initAnimations() {
         });
     });
 
-    // Ending Fade Ups
-    gsap.utils.toArray(".fade-up").forEach((el) => {
+    // Ending Fade Ups with stagger
+    gsap.utils.toArray(".fade-up").forEach((el, index) => {
         gsap.to(el, {
             scrollTrigger: {
                 trigger: el,
@@ -220,12 +221,13 @@ function initAnimations() {
             opacity: 1,
             y: 0,
             duration: 1.5,
-            ease: "power4.out"
+            ease: "power4.out",
+            delay: index * 0.2
         });
     });
 }
 
-// 4. Custom Cursor (Desktop only)
+// 4. Custom Cursor with enhanced effects
 function initCursor() {
     const cursor = document.querySelector('#cursor');
     const cursorBlur = document.querySelector('#cursor-blur');
@@ -235,7 +237,7 @@ function initCursor() {
         gsap.to(cursorBlur, { x: e.clientX, y: e.clientY, duration: 0.5 });
     });
 
-    // Hover effect on buttons and gallery
+    // Hover effect on buttons and gallery with smooth transitions
     const interactiveElements = document.querySelectorAll('.premium-btn, .gallery-item, #sound-toggle, #secret-trigger');
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
@@ -249,7 +251,7 @@ function initCursor() {
     });
 }
 
-// 5. Secret Scene
+// 5. Secret Scene with enhanced animations
 function initSecretScene() {
     const trigger = document.querySelector('#secret-trigger');
     const scene = document.querySelector('#secret-scene');
@@ -275,6 +277,7 @@ function initSecretScene() {
         }
     });
 
+    // Enhanced typing effect
     function typeText() {
         typingElement.innerHTML = "";
         let i = 0;
@@ -285,7 +288,7 @@ function initSecretScene() {
             } else {
                 clearInterval(interval);
             }
-        }, 100);
+        }, 50);
     }
 }
 
