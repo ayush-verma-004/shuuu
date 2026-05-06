@@ -1,16 +1,35 @@
 // Cinematic Experience Logic
 
+// Check if device is mobile/touch
+const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        || (window.innerWidth <= 768 && window.matchMedia("(hover: none)").matches);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     initLenis();
     initThreeBackground();
     initAnimations();
-    initCursor();
+    if (!isMobile()) {
+        initCursor();
+    }
     initSecretScene();
+    handleMobileOptimizations();
 });
 
-// 1. Smooth Scrolling (Lenis)
+// 1. Smooth Scrolling (Lenis) - Optimized for mobile
 function initLenis() {
-    const lenis = new Lenis({
+    const config = isMobile() ? {
+        duration: 0.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        smoothTouch: true,
+        touchMultiplier: 1.5,
+        infinite: false,
+    } : {
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
@@ -20,7 +39,9 @@ function initLenis() {
         smoothTouch: false,
         touchMultiplier: 2,
         infinite: false,
-    });
+    };
+
+    const lenis = new Lenis(config);
 
     function raf(time) {
         lenis.raf(time);
@@ -30,7 +51,7 @@ function initLenis() {
     requestAnimationFrame(raf);
 }
 
-// 2. Three.js Background (Starfield)
+// 2. Three.js Background - Mobile optimized
 function initThreeBackground() {
     const canvas = document.querySelector('#bg-canvas');
     const scene = new THREE.Scene();
@@ -38,11 +59,11 @@ function initThreeBackground() {
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Particles
+    // Reduce particles on mobile for better performance
+    const particlesCount = isMobile() ? 1000 : 2000;
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 2000;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
@@ -64,14 +85,23 @@ function initThreeBackground() {
 
     camera.position.z = 3;
 
-    // Mouse Movement Effect
+    // Mouse/Touch Movement Effect
     let mouseX = 0;
     let mouseY = 0;
 
     document.addEventListener('mousemove', (event) => {
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+        if (!isMobile()) {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        }
     });
+
+    document.addEventListener('touchmove', (event) => {
+        if (event.touches.length > 0) {
+            mouseX = event.touches[0].clientX;
+            mouseY = event.touches[0].clientY;
+        }
+    }, { passive: true });
 
     function animate() {
         requestAnimationFrame(animate);
@@ -79,7 +109,7 @@ function initThreeBackground() {
         particlesMesh.rotation.y += 0.001;
         particlesMesh.rotation.x += 0.0005;
 
-        // Subtle mouse follow
+        // Subtle movement
         const targetX = (mouseX - window.innerWidth / 2) * 0.0001;
         const targetY = (mouseY - window.innerHeight / 2) * 0.0001;
         particlesMesh.position.x += (targetX - particlesMesh.position.x) * 0.05;
@@ -94,10 +124,10 @@ function initThreeBackground() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    }, { passive: true });
 }
 
-// 3. GSAP Animations
+// 3. GSAP Animations - Mobile optimized
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -120,14 +150,14 @@ function initAnimations() {
           ease: "power4.out" 
       }, "-=0.5");
 
-    // Enter Button Camera Zoom Effect
+    // Enter Button
     const enterBtn = document.querySelector('#enter-btn');
     enterBtn.addEventListener('click', () => {
         gsap.to(window, { scrollTo: "#gallery", duration: 2, ease: "power4.inOut" });
         gsap.to("#hero", { scale: 1.2, opacity: 0, duration: 2, ease: "power4.inOut" });
     });
 
-    // Gallery Parallax/Appear
+    // Gallery Animations
     gsap.utils.toArray(".gallery-item").forEach((item) => {
         gsap.from(item, {
             scrollTrigger: {
@@ -157,19 +187,21 @@ function initAnimations() {
         });
     });
 
-    // Floating Cards Animation
+    // Floating Cards Animation - Reduced movement on mobile
     const cards = gsap.utils.toArray(".float-card");
+    const cardMovement = isMobile() ? 10 : 20;
+    
     cards.forEach((card, i) => {
         // Random starting positions
         gsap.set(card, {
-            x: (Math.random() - 0.5) * 400,
-            y: (Math.random() - 0.5) * 200,
+            x: (Math.random() - 0.5) * (isMobile() ? 100 : 400),
+            y: (Math.random() - 0.5) * (isMobile() ? 50 : 200),
         });
 
-        // Floating loop
+        // Floating loop with reduced movement on mobile
         gsap.to(card, {
-            y: "+=20",
-            x: "+=10",
+            y: `+=${isMobile() ? 10 : cardMovement}`,
+            x: `+=${isMobile() ? 5 : 10}`,
             duration: 2 + Math.random() * 2,
             repeat: -1,
             yoyo: true,
@@ -193,7 +225,7 @@ function initAnimations() {
     });
 }
 
-// 4. Custom Cursor
+// 4. Custom Cursor (Desktop only)
 function initCursor() {
     const cursor = document.querySelector('#cursor');
     const cursorBlur = document.querySelector('#cursor-blur');
@@ -235,6 +267,14 @@ function initSecretScene() {
         typingElement.innerHTML = "";
     });
 
+    // Close on background click
+    scene.addEventListener('click', (e) => {
+        if (e.target === scene) {
+            scene.classList.remove('active');
+            typingElement.innerHTML = "";
+        }
+    });
+
     function typeText() {
         typingElement.innerHTML = "";
         let i = 0;
@@ -249,27 +289,63 @@ function initSecretScene() {
     }
 }
 
-// 3D Tilt Effect for Gallery (Simple)
-document.querySelectorAll('.tilt').forEach(item => {
-    item.addEventListener('mousemove', (e) => {
-        const { left, top, width, height } = item.getBoundingClientRect();
-        const x = (e.clientX - left) / width - 0.5;
-        const y = (e.clientY - top) / height - 0.5;
+// 6. 3D Tilt Effect for Gallery (Desktop only)
+function init3DTilt() {
+    document.querySelectorAll('.tilt').forEach(item => {
+        item.addEventListener('mousemove', (e) => {
+            const { left, top, width, height } = item.getBoundingClientRect();
+            const x = (e.clientX - left) / width - 0.5;
+            const y = (e.clientY - top) / height - 0.5;
 
-        gsap.to(item.querySelector('.glass-frame'), {
-            rotationY: x * 20,
-            rotationX: -y * 20,
-            duration: 0.5,
-            ease: "power2.out"
+            gsap.to(item.querySelector('.glass-frame'), {
+                rotationY: x * 20,
+                rotationX: -y * 20,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        });
+
+        item.addEventListener('mouseleave', () => {
+            gsap.to(item.querySelector('.glass-frame'), {
+                rotationY: 0,
+                rotationX: 0,
+                duration: 0.5,
+                ease: "power2.out"
+            });
         });
     });
+}
 
-    item.addEventListener('mouseleave', () => {
-        gsap.to(item.querySelector('.glass-frame'), {
-            rotationY: 0,
-            rotationX: 0,
-            duration: 0.5,
-            ease: "power2.out"
+// 7. Mobile-specific optimizations
+function handleMobileOptimizations() {
+    if (isMobile()) {
+        // Disable 3D tilt on mobile
+        document.querySelectorAll('.tilt').forEach(item => {
+            item.style.transform = 'none';
         });
-    });
-});
+
+        // Add touch feedback to buttons
+        const buttons = document.querySelectorAll('.premium-btn, #sound-toggle, #secret-trigger');
+        buttons.forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.opacity = '0.7';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.opacity = '1';
+            });
+        });
+
+        // Reduce scroll trigger sensitivity
+        ScrollTrigger.normalizeScroll(true);
+    } else {
+        // Initialize 3D tilt only on desktop
+        init3DTilt();
+    }
+}
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    if (window.innerWidth <= 768 && !isMobile()) {
+        location.reload();
+    }
+}, { passive: true });
