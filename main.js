@@ -1,47 +1,33 @@
 // Cinematic Experience Logic
 
-// Check if device is mobile/touch
-const isMobile = () => {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-        || (window.innerWidth <= 768 && window.matchMedia("(hover: none)").matches);
-};
-
 document.addEventListener('DOMContentLoaded', () => {
-    initLenis();
-    initThreeBackground();
-    initAnimations();
-    if (!isMobile()) {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768;
+    
+    initLenis(isTouchDevice);
+    initThreeBackground(isTouchDevice);
+    initAnimations(isTouchDevice);
+    
+    if (!isTouchDevice) {
         initCursor();
     }
+    
     initSecretScene();
-    handleMobileOptimizations();
+    handleMobileOptimizations(isTouchDevice);
 });
 
 // 1. Smooth Scrolling (Lenis)
-function initLenis() {
-    const config = isMobile() ? {
-        duration: 0.8,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 1,
-        smoothTouch: true,
-        touchMultiplier: 1.5,
-        infinite: false,
-    } : {
+function initLenis(isTouch) {
+    const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
         wheelMultiplier: 1,
-        smoothTouch: false,
-        touchMultiplier: 2,
+        smoothTouch: isTouch,
+        touchMultiplier: 1.5,
         infinite: false,
-    };
-
-    const lenis = new Lenis(config);
+    });
 
     function raf(time) {
         lenis.raf(time);
@@ -51,19 +37,19 @@ function initLenis() {
     requestAnimationFrame(raf);
 }
 
-// 2. Three.js Background - Mobile optimized
-function initThreeBackground() {
+// 2. Three.js Background (Starfield)
+function initThreeBackground(isTouch) {
     const canvas = document.querySelector('#bg-canvas');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isTouch });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Reduce particles on mobile for better performance
-    const particlesCount = isMobile() ? 1000 : 2000;
+    // Particles
     const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = isTouch ? 800 : 2000;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
@@ -73,10 +59,10 @@ function initThreeBackground() {
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
     const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.005,
+        size: isTouch ? 0.008 : 0.005,
         color: 0xffffff,
         transparent: true,
-        opacity: 0.8,
+        opacity: 0.6,
         blending: THREE.AdditiveBlending
     });
 
@@ -85,17 +71,18 @@ function initThreeBackground() {
 
     camera.position.z = 3;
 
-    // Mouse/Touch Movement Effect
+    // Mouse Movement Effect
     let mouseX = 0;
     let mouseY = 0;
 
-    document.addEventListener('mousemove', (event) => {
-        if (!isMobile()) {
+    if (!isTouch) {
+        document.addEventListener('mousemove', (event) => {
             mouseX = event.clientX;
             mouseY = event.clientY;
-        }
-    });
+        });
+    }
 
+    // Touch support for ambient movement
     document.addEventListener('touchmove', (event) => {
         if (event.touches.length > 0) {
             mouseX = event.touches[0].clientX;
@@ -109,7 +96,7 @@ function initThreeBackground() {
         particlesMesh.rotation.y += 0.001;
         particlesMesh.rotation.x += 0.0005;
 
-        // Subtle movement
+        // Subtle follow
         const targetX = (mouseX - window.innerWidth / 2) * 0.0001;
         const targetY = (mouseY - window.innerHeight / 2) * 0.0001;
         particlesMesh.position.x += (targetX - particlesMesh.position.x) * 0.05;
@@ -128,10 +115,10 @@ function initThreeBackground() {
 }
 
 // 3. GSAP Animations
-function initAnimations() {
+function initAnimations(isTouch) {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Loader Timeline with enhanced animations
+    // Loader Timeline
     const tl = gsap.timeline();
 
     tl.to(".glow-line", { width: "100%", duration: 1.5, ease: "power2.inOut" })
@@ -157,7 +144,7 @@ function initAnimations() {
         gsap.to("#hero", { scale: 1.2, opacity: 0, duration: 2, ease: "power4.inOut" });
     });
 
-    // Gallery Animations with stagger
+    // Gallery Animations
     gsap.utils.toArray(".gallery-item").forEach((item, index) => {
         gsap.from(item, {
             scrollTrigger: {
@@ -169,11 +156,11 @@ function initAnimations() {
             y: 100,
             duration: 1.5,
             ease: "power4.out",
-            delay: index * 0.15
+            delay: index * 0.1
         });
     });
 
-    // Story Text Fade-in-out with enhanced effect
+    // Story Text Fade-in-out
     gsap.utils.toArray(".story-text").forEach((text) => {
         gsap.to(text, {
             scrollTrigger: {
@@ -183,35 +170,33 @@ function initAnimations() {
                 scrub: true,
             },
             opacity: 1,
-            scale: 1.05,
+            scale: 1.1,
             color: "#fff"
         });
     });
 
-    // Floating Cards Animation - Reduced movement on mobile
-    const cards = gsap.utils.toArray(".float-card");
-    const cardMovement = isMobile() ? 10 : 20;
-    
-    cards.forEach((card, i) => {
-        // Random starting positions
-        gsap.set(card, {
-            x: (Math.random() - 0.5) * (isMobile() ? 100 : 400),
-            y: (Math.random() - 0.5) * (isMobile() ? 50 : 200),
-        });
+    // Floating Cards Animation
+    if (!isTouch) {
+        const cards = gsap.utils.toArray(".float-card");
+        cards.forEach((card, i) => {
+            gsap.set(card, {
+                x: (Math.random() - 0.5) * 400,
+                y: (Math.random() - 0.5) * 200,
+            });
 
-        // Floating loop with reduced movement on mobile
-        gsap.to(card, {
-            y: `+=${isMobile() ? 10 : cardMovement}`,
-            x: `+=${isMobile() ? 5 : 10}`,
-            duration: 2 + Math.random() * 2,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-            delay: i * 0.5
+            gsap.to(card, {
+                y: "+=20",
+                x: "+=10",
+                duration: 2 + Math.random() * 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                delay: i * 0.5
+            });
         });
-    });
+    }
 
-    // Ending Fade Ups with stagger
+    // Ending Fade Ups
     gsap.utils.toArray(".fade-up").forEach((el, index) => {
         gsap.to(el, {
             scrollTrigger: {
@@ -222,12 +207,12 @@ function initAnimations() {
             y: 0,
             duration: 1.5,
             ease: "power4.out",
-            delay: index * 0.2
+            delay: index * 0.1
         });
     });
 }
 
-// 4. Custom Cursor with enhanced effects
+// 4. Custom Cursor
 function initCursor() {
     const cursor = document.querySelector('#cursor');
     const cursorBlur = document.querySelector('#cursor-blur');
@@ -237,7 +222,6 @@ function initCursor() {
         gsap.to(cursorBlur, { x: e.clientX, y: e.clientY, duration: 0.5 });
     });
 
-    // Hover effect on buttons and gallery with smooth transitions
     const interactiveElements = document.querySelectorAll('.premium-btn, .gallery-item, #sound-toggle, #secret-trigger');
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
@@ -251,7 +235,7 @@ function initCursor() {
     });
 }
 
-// 5. Secret Scene with enhanced animations
+// 5. Secret Scene
 function initSecretScene() {
     const trigger = document.querySelector('#secret-trigger');
     const scene = document.querySelector('#secret-scene');
@@ -269,7 +253,6 @@ function initSecretScene() {
         typingElement.innerHTML = "";
     });
 
-    // Close on background click
     scene.addEventListener('click', (e) => {
         if (e.target === scene) {
             scene.classList.remove('active');
@@ -277,7 +260,6 @@ function initSecretScene() {
         }
     });
 
-    // Enhanced typing effect
     function typeText() {
         typingElement.innerHTML = "";
         let i = 0;
@@ -292,7 +274,29 @@ function initSecretScene() {
     }
 }
 
-// 6. 3D Tilt Effect for Gallery (Desktop only)
+// 6. Mobile Optimizations & Tilt
+function handleMobileOptimizations(isTouch) {
+    if (isTouch) {
+        document.querySelectorAll('.tilt').forEach(item => {
+            item.style.transform = 'none';
+        });
+
+        const buttons = document.querySelectorAll('.premium-btn, #sound-toggle, #secret-trigger');
+        buttons.forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.opacity = '0.7';
+            }, { passive: true });
+            btn.addEventListener('touchend', () => {
+                btn.style.opacity = '1';
+            }, { passive: true });
+        });
+
+        ScrollTrigger.normalizeScroll(true);
+    } else {
+        init3DTilt();
+    }
+}
+
 function init3DTilt() {
     document.querySelectorAll('.tilt').forEach(item => {
         item.addEventListener('mousemove', (e) => {
@@ -319,36 +323,9 @@ function init3DTilt() {
     });
 }
 
-// 7. Mobile-specific optimizations
-function handleMobileOptimizations() {
-    if (isMobile()) {
-        // Disable 3D tilt on mobile
-        document.querySelectorAll('.tilt').forEach(item => {
-            item.style.transform = 'none';
-        });
-
-        // Add touch feedback to buttons
-        const buttons = document.querySelectorAll('.premium-btn, #sound-toggle, #secret-trigger');
-        buttons.forEach(btn => {
-            btn.addEventListener('touchstart', () => {
-                btn.style.opacity = '0.7';
-            });
-            btn.addEventListener('touchend', () => {
-                btn.style.opacity = '1';
-            });
-        });
-
-        // Reduce scroll trigger sensitivity
-        ScrollTrigger.normalizeScroll(true);
-    } else {
-        // Initialize 3D tilt only on desktop
-        init3DTilt();
-    }
-}
-
 // Handle window resize
 window.addEventListener('resize', () => {
-    if (window.innerWidth <= 768 && !isMobile()) {
-        location.reload();
+    if (window.innerWidth <= 768) {
+        ScrollTrigger.refresh();
     }
 }, { passive: true });

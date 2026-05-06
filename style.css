@@ -43,6 +43,12 @@ canvas#bg-canvas {
     padding: 0 40px;
 }
 
+@media (max-width: 768px) {
+    .container {
+        padding: 0 20px;
+    }
+}
+
 .v-section {
     min-height: 100vh;
     display: flex;
@@ -75,6 +81,15 @@ canvas#bg-canvas {
     transform: translate(-50%, -50%);
     transition: width 0.3s, height 0.3s;
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+@media (pointer: coarse), (max-width: 768px) {
+    #cursor, #cursor-blur {
+        display: none !important;
+    }
+    body {
+        cursor: auto !important;
+    }
 }
 
 /* Loader */
@@ -129,7 +144,6 @@ canvas#bg-canvas {
     color: var(--secondary-color);
     margin-bottom: 10px;
     letter-spacing: 0.5px;
-    text-transform: none;
 }
 
 .hero-content h1 {
@@ -160,26 +174,10 @@ canvas#bg-canvas {
     font-weight: 600;
 }
 
-.premium-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: -1;
-}
-
 .premium-btn:hover {
     border-color: #fff;
-    box-shadow: 0 0 30px rgba(255,255,255,0.3), inset 0 0 20px rgba(255,255,255,0.1);
+    box-shadow: 0 0 30px rgba(255,255,255,0.3);
     transform: translateY(-2px);
-}
-
-.premium-btn:hover::before {
-    left: 100%;
 }
 
 .btn-glow {
@@ -199,17 +197,6 @@ canvas#bg-canvas {
 /* Gallery */
 .section-header {
     margin-bottom: 60px;
-    position: relative;
-}
-
-.section-header::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -20px;
-    width: 80px;
-    height: 3px;
-    background: linear-gradient(90deg, #fff, transparent);
 }
 
 .sub-heading {
@@ -242,20 +229,6 @@ canvas#bg-canvas {
     cursor: pointer;
 }
 
-.gallery-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
-    opacity: 0;
-    z-index: 2;
-    transition: opacity 0.5s ease;
-}
-
-.gallery-item:hover::before {
-    opacity: 1;
-}
-
 .glass-frame {
     width: 100%;
     height: 100%;
@@ -266,22 +239,17 @@ canvas#bg-canvas {
     transition: all 0.5s ease;
 }
 
-.gallery-item:hover .glass-frame {
-    border-color: rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.05);
-}
-
 .gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: saturate(0.8) contrast(1.1) brightness(0.95);
+    filter: saturate(0.8) contrast(1.1);
     transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
 .gallery-item:hover img {
     transform: scale(1.08);
-    filter: saturate(1.1) contrast(1.15) brightness(1);
+    filter: saturate(1) contrast(1.1);
 }
 
 .gallery-item::after {
@@ -295,7 +263,7 @@ canvas#bg-canvas {
     font-size: 1.2rem;
     opacity: 0;
     transform: translateY(20px);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s ease;
     text-shadow: 0 4px 15px rgba(0,0,0,0.7);
     z-index: 3;
 }
@@ -318,7 +286,6 @@ canvas#bg-canvas {
     font-size: clamp(2rem, 5vw, 4rem);
     text-align: center;
     opacity: 0.1;
-    letter-spacing: -0.5px;
     line-height: 1.3;
 }
 
@@ -329,7 +296,7 @@ canvas#bg-canvas {
     gap: 30px;
     justify-content: center;
     position: relative;
-    height: 400px;
+    height: 500px;
 }
 
 .float-card {
@@ -342,12 +309,6 @@ canvas#bg-canvas {
     color: var(--secondary-color);
     position: absolute;
     transition: all 0.4s ease;
-    cursor: pointer;
-}
-
-.float-card:hover {
-    color: #fff;
-    transform: translateY(-5px);
 }
 
 .glass {
@@ -355,13 +316,6 @@ canvas#bg-canvas {
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(15px);
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    transition: all 0.4s ease;
-}
-
-.float-card:hover.glass {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 15px 50px rgba(255, 255, 255, 0.1);
 }
 
 /* Secret Scene */
@@ -373,11 +327,6 @@ canvas#bg-canvas {
     height: 20px;
     cursor: pointer;
     z-index: 100;
-    transition: all 0.3s ease;
-}
-
-#secret-trigger:hover {
-    transform: scale(1.2);
 }
 
 .pulse-glow {
@@ -390,9 +339,9 @@ canvas#bg-canvas {
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 20px #fff; }
-    50% { transform: scale(1.5); opacity: 0.3; box-shadow: 0 0 40px #fff; }
-    100% { transform: scale(1); opacity: 1; box-shadow: 0 0 20px #fff; }
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.3; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 #secret-scene {
@@ -408,8 +357,7 @@ canvas#bg-canvas {
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(5px);
+    transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 #secret-scene.active {
@@ -421,18 +369,6 @@ canvas#bg-canvas {
     text-align: center;
     max-width: 600px;
     padding: 20px;
-    animation: slideInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .heartbeat {
@@ -441,7 +377,7 @@ canvas#bg-canvas {
     background: #fff;
     border-radius: 50%;
     margin: 0 auto 40px;
-    box-shadow: 0 0 50px #fff, 0 0 100px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 50px #fff;
     animation: beat 1s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }
 
@@ -458,8 +394,6 @@ canvas#bg-canvas {
     font-size: 1.8rem;
     font-style: italic;
     min-height: 2.5rem;
-    word-wrap: break-word;
-    letter-spacing: 0.5px;
 }
 
 .close-btn {
@@ -472,22 +406,11 @@ canvas#bg-canvas {
     font-size: 2rem;
     cursor: pointer;
     opacity: 0.5;
-    transition: all 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: 0.3s;
 }
 
 .close-btn:hover {
     opacity: 1;
-    transform: rotate(90deg) scale(1.2);
-}
-
-.close-btn:active {
-    opacity: 0.7;
 }
 
 /* Ending */
@@ -500,17 +423,12 @@ canvas#bg-canvas {
     font-size: 2rem;
     margin-bottom: 20px;
     color: var(--secondary-color);
-    letter-spacing: 0.5px;
 }
 
 .final-line p {
     font-size: 3rem;
     color: #fff;
     margin-top: 40px;
-    background: linear-gradient(135deg, #fff 0%, #d0d0d0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 /* Sound Toggle */
@@ -523,17 +441,7 @@ canvas#bg-canvas {
     gap: 15px;
     cursor: pointer;
     z-index: 1000;
-    -webkit-tap-highlight-color: transparent;
     transition: all 0.3s ease;
-    padding: 10px 15px;
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#sound-toggle:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .music-label {
@@ -541,7 +449,6 @@ canvas#bg-canvas {
     letter-spacing: 3px;
     font-size: 0.7rem;
     opacity: 0.6;
-    font-weight: 600;
 }
 
 .bars {
@@ -557,7 +464,6 @@ canvas#bg-canvas {
     height: 100%;
     transform-origin: bottom;
     animation: bounce 1s infinite ease-in-out;
-    border-radius: 1px;
 }
 
 .bar:nth-child(2) { animation-delay: 0.2s; }
@@ -579,14 +485,8 @@ canvas#bg-canvas {
     transform: translateY(30px);
 }
 
-/* Smooth transitions */
-a, button {
-    transition: all 0.3s ease;
-}
-
 /* ============ MOBILE RESPONSIVE ============ */
 
-/* Tablets and small devices (481px - 768px) */
 @media (max-width: 768px) {
     .container {
         padding: 0 20px;
@@ -597,335 +497,101 @@ a, button {
         min-height: auto;
     }
 
-    #cursor,
-    #cursor-blur {
-        display: none;
+    #cursor, #cursor-blur {
+        display: none !important;
     }
 
-    .hero-content h2 {
-        font-size: 1.3rem;
+    body {
+        cursor: auto !important;
     }
 
     .hero-content h1 {
-        font-size: clamp(2rem, 7vw, 3.5rem);
-        margin-bottom: 30px;
+        font-size: 3.5rem;
     }
 
-    .premium-btn {
-        padding: 15px 35px;
-        font-size: 0.85rem;
-        letter-spacing: 2px;
-        min-height: 44px;
-        min-width: 44px;
+    .hero-content h2 {
+        font-size: 1.4rem;
     }
 
     .gallery-grid {
         grid-template-columns: 1fr;
-        gap: 25px;
+        gap: 20px;
     }
 
     .gallery-item {
-        height: 350px;
+        height: 450px;
     }
 
     .gallery-item::after {
-        font-size: 1rem;
+        opacity: 0.9;
+        transform: translateY(0);
         bottom: 20px;
         left: 20px;
         right: 20px;
-    }
-
-    .glass-frame {
-        padding: 15px;
+        font-size: 1rem;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 10px;
+        border-radius: 5px;
+        backdrop-filter: blur(5px);
     }
 
     .title {
-        font-size: 2rem;
-    }
-
-    .sub-heading {
-        letter-spacing: 3px;
-        font-size: 0.75rem;
-        margin-bottom: 15px;
-    }
-
-    .section-header {
-        margin-bottom: 40px;
-    }
-
-    .section-header::before {
-        width: 60px;
-        bottom: -15px;
-    }
-
-    .story-sequence {
-        gap: 8vh;
-        padding: 5vh 0;
+        font-size: 2.2rem;
     }
 
     .story-text {
-        font-size: clamp(1.5rem, 5vw, 2.5rem);
+        font-size: 2.2rem;
     }
 
     .floating-cards {
         height: auto;
-        padding-bottom: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 50px;
     }
 
     .float-card {
         position: relative !important;
-        width: 100%;
-        padding: 20px;
-        margin-bottom: 15px !important;
+        width: 100% !important;
+        margin-bottom: 0;
+        left: 0 !important;
+        top: 0 !important;
         transform: none !important;
     }
 
-    .ending-content p {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-    }
-
-    .final-line p {
-        font-size: 2rem;
-        margin-top: 25px;
-    }
-
-    #secret-trigger {
-        bottom: 20px;
-        right: 20px;
-        width: 25px;
-        height: 25px;
-    }
-
     #sound-toggle {
         top: 20px;
         right: 20px;
-        gap: 10px;
-        padding: 8px 12px;
     }
 
     .music-label {
-        font-size: 0.65rem;
-        letter-spacing: 2px;
+        display: none;
     }
 
-    .scene-content {
-        max-width: 90vw;
-        padding: 30px;
-    }
-
-    #typing-text {
-        font-size: 1.2rem;
-    }
-
-    .close-btn {
-        top: 20px;
-        right: 20px;
+    .ending-content p {
         font-size: 1.5rem;
     }
 
-    .heartbeat {
-        width: 40px;
-        height: 40px;
-        margin: 0 auto 30px;
+    .final-line p {
+        font-size: 2.2rem;
     }
 
-    .loader-text {
-        font-size: 1.2rem;
+    #typing-text {
+        font-size: 1.4rem;
     }
 
-    .glow-line {
-        margin: 15px auto;
+    .scene-content {
+        padding: 0 20px;
     }
 }
 
-/* Small phones (up to 480px) */
 @media (max-width: 480px) {
-    .container {
-        padding: 0 15px;
-    }
-
-    .v-section {
-        padding: 40px 0;
-        min-height: auto;
-    }
-
-    .hero-content h2 {
-        font-size: 1.1rem;
-        margin-bottom: 8px;
-    }
-
     .hero-content h1 {
-        font-size: clamp(1.8rem, 6vw, 2.5rem);
-        margin-bottom: 20px;
-        line-height: 1.2;
+        font-size: 2.8rem;
     }
-
-    .premium-btn {
-        padding: 12px 25px;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
-    }
-
-    .gallery-grid {
-        gap: 15px;
-    }
-
+    
     .gallery-item {
-        height: 280px;
-    }
-
-    .gallery-item::after {
-        font-size: 0.9rem;
-        bottom: 15px;
-        left: 15px;
-        right: 15px;
-    }
-
-    .glass-frame {
-        padding: 10px;
-    }
-
-    .title {
-        font-size: 1.6rem;
-        line-height: 1.3;
-    }
-
-    .sub-heading {
-        letter-spacing: 2px;
-        font-size: 0.7rem;
-    }
-
-    .section-header {
-        margin-bottom: 30px;
-    }
-
-    .section-header::before {
-        width: 50px;
-        bottom: -12px;
-    }
-
-    .story-sequence {
-        gap: 6vh;
-        padding: 3vh 0;
-    }
-
-    .story-text {
-        font-size: clamp(1.3rem, 5vw, 2rem);
-        line-height: 1.3;
-    }
-
-    .float-card {
-        padding: 15px;
-        margin-bottom: 12px !important;
-        font-size: 0.9rem;
-        line-height: 1.5;
-    }
-
-    .ending-content p {
-        font-size: 1.3rem;
-        margin-bottom: 12px;
-    }
-
-    .final-line p {
-        font-size: 1.7rem;
-        margin-top: 20px;
-    }
-
-    .scene-content {
-        max-width: 95vw;
-        padding: 20px;
-    }
-
-    #typing-text {
-        font-size: 1rem;
-        min-height: 2rem;
-    }
-
-    .close-btn {
-        top: 15px;
-        right: 15px;
-        font-size: 1.3rem;
-    }
-
-    .heartbeat {
-        width: 35px;
-        height: 35px;
-        margin: 0 auto 25px;
-    }
-
-    #sound-toggle {
-        top: 15px;
-        right: 15px;
-        gap: 8px;
-        padding: 6px 10px;
-    }
-
-    .music-label {
-        font-size: 0.6rem;
-        letter-spacing: 1px;
-    }
-
-    .bars {
-        height: 12px;
-    }
-
-    .bar {
-        width: 1.5px;
-    }
-
-    #secret-trigger {
-        bottom: 15px;
-        right: 15px;
-    }
-
-    .loader-text {
-        font-size: 1rem;
-        padding: 0 15px;
-    }
-}
-
-/* Landscape orientation adjustments */
-@media (max-height: 600px) and (orientation: landscape) {
-    .v-section {
-        min-height: auto;
-        padding: 30px 0;
-    }
-
-    .hero-content h1 {
-        margin-bottom: 20px;
-    }
-
-    .gallery-item {
-        height: 300px;
-    }
-
-    .story-sequence {
-        gap: 5vh;
-    }
-
-    .floating-cards {
-        height: auto;
-    }
-
-    #secret-trigger {
-        width: 18px;
-        height: 18px;
-    }
-}
-
-/* Touch-friendly adjustments */
-@media (hover: none) and (pointer: coarse) {
-    button, [role="button"], a {
-        min-height: 44px;
-        min-width: 44px;
-    }
-
-    .premium-btn,
-    .close-btn,
-    #sound-toggle,
-    #secret-trigger {
-        -webkit-tap-highlight-color: transparent;
-        -webkit-touch-callout: none;
+        height: 350px;
     }
 }
