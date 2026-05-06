@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You | A Cinematic Experience</title>
+    <meta name="description" content="A cinematic experience built with effort and care.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-blur"></div>
+
+    <!-- Canvas for Three.js Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Loader Scene -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="glow-line"></div>
+            <p class="loader-text" id="loader-text-1">Some people become a memory.</p>
+            <p class="loader-text" id="loader-text-2">Some become a feeling.</p>
+            <p class="loader-text" id="loader-text-3">This is something I made for you.</p>
+        </div>
+    </div>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section id="hero" class="v-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h2 class="reveal-text">I didn’t know what to call this.</h2>
+                    <h1 class="reveal-text">But I knew I wanted to make it.</h1>
+                    <button id="enter-btn" class="premium-btn">
+                        <span>Enter My Mind</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section (Reflections) -->
+        <section id="gallery" class="v-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="sub-heading">01 / Reflections</span>
+                    <h2 class="title">New beginnings, captured.</h2>
+                </div>
+                <div class="gallery-grid">
+                    <div class="gallery-item tilt" data-caption="I think effort looks good on me when it’s for you.">
+                        <div class="glass-frame">
+                            <img src="img/WhatsApp Image 2026-05-06 at 6.33.09 AM.jpeg" alt="Reflection 1">
+                        </div>
+                    </div>
+                    <div class="gallery-item tilt" data-caption="The way you look when you're just being yourself.">
+                        <div class="glass-frame">
+                            <img src="img/WhatsApp Image 2026-05-06 at 6.33.09 AM (1).jpeg" alt="Reflection 2">
+                        </div>
+                    </div>
+                    <div class="gallery-item tilt" data-caption="You make the simplest frames feel cinematic.">
+                        <div class="glass-frame">
+                            <img src="img/WhatsApp Image 2026-05-06 at 6.33.09 AM (2).jpeg" alt="Reflection 3">
+                        </div>
+                    </div>
+                    <div class="gallery-item tilt" data-caption="I'm still learning the rhythm of your energy.">
+                        <div class="glass-frame">
+                            <img src="img/WhatsApp Image 2026-05-06 at 6.33.09 AM (3).jpeg" alt="Reflection 4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story Section -->
+        <section id="story" class="v-section">
+            <div class="container">
+                <div class="story-sequence">
+                    <p class="story-text">I’m not here making impossible promises.</p>
+                    <p class="story-text">I just think you deserve something real.</p>
+                    <p class="story-text">Attention is common.</p>
+                    <p class="story-text">Effort is rare.</p>
+                    <p class="story-text">So I made this.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Little Things Section -->
+        <section id="little-things" class="v-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="sub-heading">02 / Observations</span>
+                    <h2 class="title">The small things I've noticed.</h2>
+                </div>
+                <div class="floating-cards">
+                    <div class="float-card glass">
+                        <p>The way you smile before laughing.</p>
+                    </div>
+                    <div class="float-card glass">
+                        <p>Your energy changing the mood instantly.</p>
+                    </div>
+                    <div class="float-card glass">
+                        <p>The calm chaos you bring.</p>
+                    </div>
+                    <div class="float-card glass">
+                        <p>How some energy just fits, without explanation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hidden Section Trigger -->
+        <div id="secret-trigger">
+            <div class="pulse-glow"></div>
+        </div>
+
+        <!-- Secret Scene -->
+        <div id="secret-scene">
+            <div class="scene-content">
+                <div class="heartbeat"></div>
+                <p id="typing-text"></p>
+                <button id="close-secret" class="close-btn">&times;</button>
+            </div>
+        </div>
+
+        <!-- Ending Section -->
+        <section id="ending" class="v-section">
+            <div class="container">
+                <div class="ending-content">
+                    <p class="fade-up">No promises.</p>
+                    <p class="fade-up">No pressure.</p>
+                    <p class="fade-up">Just effort.</p>
+                    <div class="final-line">
+                        <p class="fade-up">And maybe that means something.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Sound Toggle -->
+    <div id="sound-toggle">
+        <span class="music-label">Atmosphere</span>
+        <div class="bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="main.js"></script>
+</body>
+</html>
