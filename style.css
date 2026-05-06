@@ -141,11 +141,16 @@ canvas#bg-canvas {
     overflow: hidden;
     cursor: pointer;
     transition: 0.3s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .premium-btn:hover {
     border-color: #fff;
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
+}
+
+.premium-btn:active {
+    opacity: 0.8;
 }
 
 .btn-glow {
@@ -330,6 +335,7 @@ canvas#bg-canvas {
 .scene-content {
     text-align: center;
     max-width: 600px;
+    padding: 20px;
 }
 
 .heartbeat {
@@ -355,6 +361,7 @@ canvas#bg-canvas {
     font-size: 1.8rem;
     font-style: italic;
     min-height: 2.5rem;
+    word-wrap: break-word;
 }
 
 .close-btn {
@@ -368,10 +375,15 @@ canvas#bg-canvas {
     cursor: pointer;
     opacity: 0.5;
     transition: 0.3s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .close-btn:hover {
     opacity: 1;
+}
+
+.close-btn:active {
+    opacity: 0.7;
 }
 
 /* Ending */
@@ -402,6 +414,7 @@ canvas#bg-canvas {
     gap: 15px;
     cursor: pointer;
     z-index: 1000;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .music-label {
@@ -445,23 +458,355 @@ canvas#bg-canvas {
     transform: translateY(30px);
 }
 
+/* ============ MOBILE RESPONSIVE ============ */
+
+/* Tablets and small devices (481px - 768px) */
 @media (max-width: 768px) {
+    .container {
+        padding: 0 20px;
+    }
+
+    .v-section {
+        padding: 60px 0;
+        min-height: auto;
+    }
+
+    /* Hide custom cursor and 3D tilt effects */
+    #cursor,
+    #cursor-blur {
+        display: none;
+    }
+
+    /* Hero adjustments */
+    .hero-content h2 {
+        font-size: 1.3rem;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(2rem, 7vw, 3.5rem);
+        margin-bottom: 30px;
+    }
+
+    .premium-btn {
+        padding: 15px 35px;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Gallery adjustments */
     .gallery-grid {
         grid-template-columns: 1fr;
+        gap: 25px;
     }
+
     .gallery-item {
-        height: 400px;
+        height: 350px;
     }
+
+    .gallery-item::after {
+        font-size: 1rem;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .glass-frame {
+        padding: 15px;
+    }
+
     .title {
         font-size: 2rem;
     }
+
+    .sub-heading {
+        letter-spacing: 3px;
+        font-size: 0.75rem;
+        margin-bottom: 15px;
+    }
+
+    .section-header {
+        margin-bottom: 40px;
+    }
+
+    /* Story adjustments */
+    .story-sequence {
+        gap: 8vh;
+        padding: 5vh 0;
+    }
+
+    .story-text {
+        font-size: clamp(1.5rem, 5vw, 2.5rem);
+    }
+
+    /* Floating cards adjustments */
     .floating-cards {
         height: auto;
-        padding-bottom: 50px;
+        padding-bottom: 20px;
     }
+
     .float-card {
-        position: relative;
+        position: relative !important;
         width: 100%;
+        padding: 20px;
+        margin-bottom: 15px !important;
+        transform: none !important;
+    }
+
+    /* Ending adjustments */
+    .ending-content p {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .final-line p {
+        font-size: 2rem;
+        margin-top: 25px;
+    }
+
+    /* Secret trigger adjustments */
+    #secret-trigger {
+        bottom: 20px;
+        right: 20px;
+        width: 25px;
+        height: 25px;
+    }
+
+    /* Sound toggle adjustments */
+    #sound-toggle {
+        top: 20px;
+        right: 20px;
+        gap: 10px;
+    }
+
+    .music-label {
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+    }
+
+    /* Secret scene adjustments */
+    .scene-content {
+        max-width: 90vw;
+        padding: 30px;
+    }
+
+    #typing-text {
+        font-size: 1.2rem;
+    }
+
+    .close-btn {
+        top: 20px;
+        right: 20px;
+        font-size: 1.5rem;
+    }
+
+    .heartbeat {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 30px;
+    }
+
+    /* Loader adjustments */
+    .loader-text {
+        font-size: 1.2rem;
+    }
+
+    .glow-line {
+        margin: 15px auto;
+    }
+}
+
+/* Small phones (up to 480px) */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .v-section {
+        padding: 40px 0;
+        min-height: auto;
+    }
+
+    /* Hero adjustments */
+    .hero-content h2 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(1.8rem, 6vw, 2.5rem);
         margin-bottom: 20px;
+        line-height: 1.2;
+    }
+
+    .premium-btn {
+        padding: 12px 25px;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    /* Gallery adjustments */
+    .gallery-grid {
+        gap: 15px;
+    }
+
+    .gallery-item {
+        height: 280px;
+    }
+
+    .gallery-item::after {
+        font-size: 0.9rem;
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+    }
+
+    .glass-frame {
+        padding: 10px;
+    }
+
+    .title {
+        font-size: 1.6rem;
+        line-height: 1.3;
+    }
+
+    .sub-heading {
+        letter-spacing: 2px;
+        font-size: 0.7rem;
+    }
+
+    .section-header {
+        margin-bottom: 30px;
+    }
+
+    /* Story adjustments */
+    .story-sequence {
+        gap: 6vh;
+        padding: 3vh 0;
+    }
+
+    .story-text {
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        line-height: 1.3;
+    }
+
+    /* Floating cards adjustments */
+    .float-card {
+        padding: 15px;
+        margin-bottom: 12px !important;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    /* Ending adjustments */
+    .ending-content p {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+    }
+
+    .final-line p {
+        font-size: 1.7rem;
+        margin-top: 20px;
+    }
+
+    /* Secret scene adjustments */
+    .scene-content {
+        max-width: 95vw;
+        padding: 20px;
+    }
+
+    #typing-text {
+        font-size: 1rem;
+        min-height: 2rem;
+    }
+
+    .close-btn {
+        top: 15px;
+        right: 15px;
+        font-size: 1.3rem;
+    }
+
+    .heartbeat {
+        width: 35px;
+        height: 35px;
+        margin: 0 auto 25px;
+    }
+
+    /* Sound toggle adjustments */
+    #sound-toggle {
+        top: 15px;
+        right: 15px;
+        gap: 8px;
+    }
+
+    .music-label {
+        font-size: 0.6rem;
+        letter-spacing: 1px;
+    }
+
+    .bars {
+        height: 12px;
+    }
+
+    .bar {
+        width: 1.5px;
+    }
+
+    /* Secret trigger adjustments */
+    #secret-trigger {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    /* Loader adjustments */
+    .loader-text {
+        font-size: 1rem;
+        padding: 0 15px;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+    .v-section {
+        min-height: auto;
+        padding: 30px 0;
+    }
+
+    .hero-content h1 {
+        margin-bottom: 20px;
+    }
+
+    .gallery-item {
+        height: 300px;
+    }
+
+    .story-sequence {
+        gap: 5vh;
+    }
+
+    .floating-cards {
+        height: auto;
+    }
+
+    #secret-trigger {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+    button, [role="button"], a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .premium-btn,
+    .close-btn,
+    #sound-toggle,
+    #secret-trigger {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
     }
 }
